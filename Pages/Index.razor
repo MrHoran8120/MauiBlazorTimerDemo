@@ -1,5 +1,5 @@
 ﻿@page "/"
-@using System.Timers;
+@using System.Timers;       // we need this to make sure we get the right type of timer.
 
 <h1>Hello, world!</h1>
 
@@ -11,15 +11,15 @@
 
 @code {
     string testString = "";
-    System.Timers.Timer myTimer;
+    System.Timers.Timer myTimer;                    // define the variable myTimer but do not instantiate.
 
     private void handleClick()
     {
         testString = "Key pressed";
 
-        myTimer = new Timer();
+        myTimer = new Timer();                      // now instantiate a timer.
 
-        myTimer.Interval = 1500;
+        myTimer.Interval = 5000;                    // setup
         myTimer.Enabled = true;
         myTimer.Elapsed += myTickHandler;
         myTimer.Start();
@@ -28,10 +28,14 @@
     private void myTickHandler(Object source, System.Timers.ElapsedEventArgs e)
     {
         testString = "Finished";
-        InvokeAsync(() =>
+
+        // this bit forces an update of the screen
+        InvokeAsync(() =>                           // note that you must use InvokeAsync here
         {
-            StateHasChanged();
+            StateHasChanged();                      // StateHasChanged is the actual command that will for a refesh of the screen
         });
+
+        myTimer.Dispose();                          // note we dispose of the timer once we have finished.
 
     }
 
